@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.net.*;
 import java.util.ArrayList;
-import java.io.*;
+import java.io.*; //need fileIO methods
 
 public class TeacherMenu {
     Image image;
