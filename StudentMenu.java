@@ -181,7 +181,7 @@ public class StudentMenu {
      */
     public void chooseQuiz(FileInput in, Student student, JFrame quizInitialMenu, JFrame takeQuiz, JFrame frame, JComboBox comboBox) {
         frame.setVisible(false);
-        //incomplete
+        comboBox.removeAllItems();
 
     }
 
