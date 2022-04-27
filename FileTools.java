@@ -1,4 +1,4 @@
-public class FileEdit {
+public class FileTools {
     /**
      * Takes a username as input and checks if it exists. Returns true
      * if taken and false if not.
