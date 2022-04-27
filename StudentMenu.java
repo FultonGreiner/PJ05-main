@@ -116,9 +116,9 @@ public class StudentMenu {
 
     /**
      * Exit
-     * 
+     *
      * A simple method that lets the student sign out.
-     * 
+     *
      */
     public void exit() {
         JOptionPane.showMessageDialog(null, "Goodbye", "Student menu", JOptionPane.PLAIN_MESSAGE);
@@ -127,11 +127,11 @@ public class StudentMenu {
 
     /**
      * Edit Password
-     * 
+     *
      * The method that lets a student edit their password. Deletes
      * the existing student file and replaces it with a new one
      * using the old user info and the new password.
-     * 
+     *
      * @param edit      Contains all File edit methods
      * @param out       Contains all File output methods
      * @param student   The info of this student
