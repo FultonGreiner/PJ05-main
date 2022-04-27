@@ -1,71 +1,104 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.net.*;
 import java.util.ArrayList;
-import java.io.*; //need fileIO methods
 
 public class TeacherMenu {
-    Image image;
 
-    JButton editPwdButton;
-    JButton createCourseButton;
-    JButton viewCourseButton;
-    JButton deletCourseButton;
-    JButton logOutButton;
-
-    JButton createQuizButton;
-    JButton editQuizButton;
-    JButton viewSubmissionsButton;
-    JButton viewQuizButton;
-    JButton deletQuizButton;
-
-    TeacherMenu teacherMenu;
-
-    ActionListener a = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == editPwdButton) {
-                teacherMenu.editPwd();
-            }
-            if (e.getSource() == createCourseButton) {
-                teacherMenu.createCourse();
-            }
-            if (e.getSource() == viewCourseButton) {
-                teacherMenu.viewCourse();
-            }
-            if (e.getSource() == deletCourseButton) {
-                teacherMenu.deletCourse();
-            }
-            if (e.getSource() == createQuizButton) {
-                teacherMenu.createQuiz();
-            }
-            if (e.getSource() == editQuizButton) {
-                teacherMenu.editQuiz();
-            }
-            if (e.getSource() == viewSubmissionsButton) {
-                teacherMenu.viewSubmissions();
-            }
-            if (e.getSource() == viewQuizButton) {
-                teacherMenu.quizList();
-            }
-            if (e.getSource() == deletQuizButton) {
-                teacherMenu.deletQuiz();
-            }
-            if (e.getSource() == logOutButton) {
-                teacherMenu.logOut();
-            }
-        }
-    };
+    JTextField newAcc;
+    JTextField quizName;
 
     /**
-     * LogOut
+     * TeacherMenu
+     * The main operations screen for the teacher menu. Sets up what the
+     * main user interface will look like. Uses a run method and 
+     * FlowLayout menus. All possible actions have a menu of their own,
+     * but most menus are not visible at first.
+     *
+     * @param teacher A teacher object containing information for this teacher
+     * @param in      Contains File input methods.
+     * @param out     Contains File output methods.
+     * @param edit    Contains File editing methods.
+     * @param //socket  Lets the user connect to the server (not currently in use)
+     */
+    public TeacherMenu(Teacher teacher, FileInput in, FileOutput out, FileEdit edit) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JFrame frame = new JFrame("Project 5 Teacher Menu");
+                frame.setPreferredSize(new Dimension(500, 500));
+                frame.setLayout(new FlowLayout());
+                JPanel panel = new JPanel();
+                JLabel label = new JLabel("Welcome, " + teacher.getUsername());
+
+                JFrame account = new JFrame("Project 5 Teacher Menu");
+                account.setPreferredSize(new Dimension(500, 500));
+                account.setLayout(new FlowLayout());
+                JPanel pan = new JPanel();
+                JLabel changeAcc = new JLabel("Enter your new password");
+                newAcc = new JTextField(12);
+                pan.add(changeAcc);
+                pan.add(newAcc);
+                account.pack();
+                account.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                account.setVisible(false);
+
+                JFrame createQuiz = new JFrame("Project 5 Teacher Menu");
+                createQuiz.setPreferredSize(new Dimension(500, 500));
+                createQuiz.setLayout(new FlowLayout());
+                JPanel pane = new JPanel();
+                JLabel quiz = new JLabel("Enter the filename of the quiz");
+                quizName = new JTextField(100);
+                pane.add(quiz);
+                pane.add(quizName);
+                createQuiz.pack();
+                createQuiz.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                createQuiz.setVisible(false);
+
+
+                JComboBox<String> comboBox = new JComboBox<>();
+                comboBox.addItem("Edit account");
+                comboBox.addItem("Create quiz");
+                comboBox.addItem("Edit quiz");
+                comboBox.addItem("Existing quizzes");
+                comboBox.addItem("Delete quiz");
+                comboBox.addItem("Log out");
+                comboBox.addItemListener(listener -> {
+                    String choice;
+                    JComboBox getSelection = (JComboBox) listener.getSource();
+                    choice = (String) getSelection.getSelectedItem();
+                    if (choice.equals("Edit account")) {
+                        editPwd(edit, out, teacher, account, frame);
+                    }
+                    if (choice.equals("Create quiz")) {
+                        createQuiz(out, createQuiz, frame);
+                    }
+                    if (choice.equals("Edit quiz")) {
+                        editQuiz();
+                    }
+                    if (choice.equals("Existing quizzes")) {
+                        quizList();
+                    }
+                    if (choice.equals("Delete quiz")) {
+                        deletQuiz();
+                    }
+                    if (choice.equals("Log out")) {
+                        exit();
+                    }
+                });
+            }
+        });
+
+    }
+
+
+
+    /**
+     * Exit
      * A simple logout method that shows the user a message and exits.
      *
      * @author Chingyan Huang, L17
-     *
      */
-    public void logOut() {
+    public void exit() {
         JOptionPane.showMessageDialog(null, "Goodbye", "Teacher menu", JOptionPane.PLAIN_MESSAGE);
         return;
     }
@@ -74,62 +107,41 @@ public class TeacherMenu {
      * EditPwd
      * Allows a user to edit their password. Their information
      * on the server/file is updated accordingly.
-     *
      */
-    public void editPwd() {
+    public void editPwd(FileEdit edit, FileOutput out, Teacher teacher, JFrame account, JFrame frame) {
+        String newPwd = "";
+        frame.setVisible(false);
+        newPwd = String.valueOf(newAcc.getText());
+        edit.removeUser(teacher.getName(), teacher.getUsername(), teacher.getPassword(), teacher.getUsername() + ".txt", "TeacherData.txt");
+        try {
+            Teacher newInfo = new Teacher(teacher.getName(), teacher.getUsername(), newPwd);
+            out.writeTeacher(newInfo);
+            JOptionPane.showMessageDialog(null, "Success, please log back in");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error", "Teacher menu", JOptionPane.ERROR_MESSAGE);
+        }
 
-    }
-
-    /**
-     * CreateCourse
-     *
-     * Teachers can create a new course and
-     * attach a file containing a quiz/quiz
-     * questions for that course.
-     *
-     */
-    public void createCourse() {
-
-    }
-
-    /**
-     * ViewCourse
-     *
-     * Teachers can view existing courses and
-     * see the list of quizzes in a particular course.
-     *
-     */
-    public void viewCourse() {
-
-    }
-
-    /**
-     * DeleteCourse
-     *
-     * Teachers can delete a course and all
-     * quizzes associated with that course if they so choose.
-     *
-     */
-    public void deletCourse() {
 
     }
 
     /**
      * CreateQuiz
-     *
+     * <p>
      * A teacher can add a new quiz to a corresponding course.
-     *
      */
-    public void createQuiz() {
+    public void createQuiz(FileOutput out, JFrame createQuiz, JFrame frame) {
+        frame.setVisible(false);
+        createQuiz.setVisible(true);
 
+
+        Quiz quiz = new Quiz(question, questions); //incomplete
     }
 
     /**
      * EditQuiz
-     *
+     * <p>
      * A teacher can edit the questions/answers in a
      * particular quiz.
-     *
      */
     public void editQuiz() {
 
@@ -138,10 +150,9 @@ public class TeacherMenu {
 
     /**
      * ViewSubmissions
-     *
+     * <p>
      * A teacher can view the (auto-graded) student submissions
      * for a particular quiz.
-     *
      */
     public void viewSubmissions() {
 
@@ -149,10 +160,9 @@ public class TeacherMenu {
 
     /**
      * QuizList
-     *
+     * <p>
      * A teacher can look at the current quiz list in a particular
      * course without editing anything.
-     *
      */
     public void quizList() {
 
@@ -161,44 +171,13 @@ public class TeacherMenu {
 
     /**
      * DeleteQuiz
-     *
+     * <p>
      * A teacher can delete a quiz in a course, along with all
      * questions associated with that quiz.
-     *
      */
     public void deletQuiz() {
 
     }
 
-    /**
-     * TeacherMenu
-     * The main operations screen for the teacher menu. Sets up what the
-     * main user interface will look like.
-     *
-     * @param teacher A teacher object containing information for this teacher
-     * @param io    An io object that contains the FileIO methods
-     * @param socket    Lets the user connect to the server
-     */
-    public TeacherMenu(Teacher teacher, FileIO io, Socket socket) {
-        JFrame frame = new JFrame("Project 5 Teacher Menu");
-        Container content = frame.getContentPane();
-        content.setLayout(new BorderLayout());
-        /*
-        panel can be cleared for each new screen to show the new button menus
-         */
-        JPanel panel = new JPanel();
-        //maybe we can add a JTextField saying "Welcome, *username*" like last time?
-        panel.add(editPwdButton);
-        panel.add(createCourseButton);
-        panel.add(viewCourseButton);
-        panel.add(deletCourseButton);
-        panel.add(logOutButton);
-        frame.setSize(600, 400);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-        //empty the panel after a button is clicked and update the interface accordingly.
-
-    }
 
 }
