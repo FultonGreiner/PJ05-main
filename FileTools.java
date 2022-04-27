@@ -1,3 +1,5 @@
+
+
 public class FileTools {
     /**
      * Takes a username as input and checks if it exists. Returns true
