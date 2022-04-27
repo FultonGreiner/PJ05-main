@@ -1,16 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class TeacherMenu {
 
     JTextField newAcc;
     JTextField quizName;
+    JTextField number;
 
     /**
      * TeacherMenu
      * The main operations screen for the teacher menu. Sets up what the
-     * main user interface will look like. Uses a run method and 
+     * main user interface will look like. Uses a run method and
      * FlowLayout menus. All possible actions have a menu of their own,
      * but most menus are not visible at first.
      *
@@ -29,6 +31,7 @@ public class TeacherMenu {
                 frame.setLayout(new FlowLayout());
                 JPanel panel = new JPanel();
                 JLabel label = new JLabel("Welcome, " + teacher.getUsername());
+                JButton enterButton = new JButton("Enter");
 
                 JFrame account = new JFrame("Project 5 Teacher Menu");
                 account.setPreferredSize(new Dimension(500, 500));
@@ -38,6 +41,9 @@ public class TeacherMenu {
                 newAcc = new JTextField(12);
                 pan.add(changeAcc);
                 pan.add(newAcc);
+
+
+                account.add(pan);
                 account.pack();
                 account.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 account.setVisible(false);
@@ -50,9 +56,25 @@ public class TeacherMenu {
                 quizName = new JTextField(100);
                 pane.add(quiz);
                 pane.add(quizName);
+                pane.add(enterButton);
+                createQuiz.add(pane);
                 createQuiz.pack();
                 createQuiz.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 createQuiz.setVisible(false);
+
+                JFrame editQuiz = new JFrame("Project 5 Teacher Menu");
+                editQuiz.setPreferredSize(new Dimension(500, 500));
+                editQuiz.setLayout(new FlowLayout());
+                JPanel window = new JPanel();
+                JLabel num = new JLabel("Enter the number of the quiz you'd like to edit");
+                number = new JTextField(12);
+                window.add(num);
+                window.add(number);
+                window.add(enterButton);
+                editQuiz.add(window);
+                editQuiz.pack();
+                editQuiz.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                editQuiz.setVisible(false);
 
 
                 JComboBox<String> comboBox = new JComboBox<>();
@@ -73,10 +95,10 @@ public class TeacherMenu {
                         createQuiz(out, createQuiz, frame);
                     }
                     if (choice.equals("Edit quiz")) {
-                        editQuiz();
+                        editQuiz(out, editQuiz, frame);
                     }
-                    if (choice.equals("Existing quizzes")) {
-                        quizList();
+                    if (choice.equals("View students")) {
+                        viewSubmissions();
                     }
                     if (choice.equals("Delete quiz")) {
                         deletQuiz();
@@ -85,6 +107,12 @@ public class TeacherMenu {
                         exit();
                     }
                 });
+                panel.add(label);
+                panel.add(comboBox);
+                frame.add(panel);
+                frame.pack();
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setVisible(true);
             }
         });
 
@@ -121,7 +149,6 @@ public class TeacherMenu {
             JOptionPane.showMessageDialog(null, "Error", "Teacher menu", JOptionPane.ERROR_MESSAGE);
         }
 
-
     }
 
     /**
@@ -135,6 +162,7 @@ public class TeacherMenu {
 
 
         Quiz quiz = new Quiz(question, questions); //incomplete
+        out.writeQuiz();
     }
 
     /**
@@ -143,8 +171,9 @@ public class TeacherMenu {
      * A teacher can edit the questions/answers in a
      * particular quiz.
      */
-    public void editQuiz() {
-
+    public void editQuiz(FileOutput out, JFrame editQuiz, JFrame frame) {
+        frame.setVisible(false);
+        editQuiz.setVisible(true);
     }
 
 
@@ -155,16 +184,6 @@ public class TeacherMenu {
      * for a particular quiz.
      */
     public void viewSubmissions() {
-
-    }
-
-    /**
-     * QuizList
-     * <p>
-     * A teacher can look at the current quiz list in a particular
-     * course without editing anything.
-     */
-    public void quizList() {
 
     }
 
@@ -181,3 +200,4 @@ public class TeacherMenu {
 
 
 }
+
