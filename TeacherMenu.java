@@ -161,8 +161,6 @@ public class TeacherMenu {
         createQuiz.setVisible(true);
 
 
-        Quiz quiz = new Quiz(question, questions); //incomplete
-        out.writeQuiz();
     }
 
     /**
