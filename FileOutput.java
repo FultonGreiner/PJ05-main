@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+
 public class FileOutput {
     /**
      * Takes a Student object as an argument and writes it to a file.
